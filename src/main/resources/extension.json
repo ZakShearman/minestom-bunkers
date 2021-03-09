@@ -1,0 +1,5 @@
+{
+  "entrypoint": "pink.zak.minestom.bunkers.BunkersExtension",
+  "version": "${version}",
+  "name": "Bunkers"
+}

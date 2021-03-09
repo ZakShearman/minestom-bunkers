@@ -1,0 +1,17 @@
+/build
+/lib
+*.idea
+.idea
+
+*.bin
+*.lock
+.gradle
+
+*.iml
+
+# dev environment stuff
+
+/chunks
+/minecraft_data
+/extensions
+/.mixin.out
