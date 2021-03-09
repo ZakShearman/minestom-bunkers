@@ -12,6 +12,7 @@ import net.minestom.server.particle.ParticleCreator;
 import net.minestom.server.utils.BlockPosition;
 import pink.zak.minestom.bunkers.BunkersExtension;
 import pink.zak.minestom.bunkers.cache.UserCache;
+import pink.zak.minestom.bunkers.loaders.KothLoader;
 import pink.zak.minestom.bunkers.models.Region;
 import pink.zak.minestom.bunkers.models.User;
 
@@ -24,11 +25,13 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class RegionModeListener {
-    private final UserCache userCache;
     private final Map<UUID, RegionOperation> regionOperationMap = Maps.newConcurrentMap();
+    private final UserCache userCache;
+    private final KothLoader kothLoader;
 
     public RegionModeListener(BunkersExtension extension) {
         this.userCache = extension.getUserCache();
+        this.kothLoader = extension.getKothLoader();
     }
 
     public void init() {
@@ -49,11 +52,17 @@ public class RegionModeListener {
                 }
                 if (regionOperation.positionOne != null) {
                     regionOperation.positionTwo = blockPosition;
-                    player.sendMessage("Set position two to the clicked location.");
-                    player.sendMessage("Your claiming has been finished and the faction's region has been set to what is currently highlighted");
-                    player.sendMessage("If you want to reclaim, simply reperform the same actions. To disable claim mode, type /fadmin toggle claim mode");
                     Region region = new Region(regionOperation.positionOne, regionOperation.positionTwo);
-                    user.getClaimMode().getFaction().setRegion(region);
+                    player.sendMessage("Set position two to the clicked location.");
+                    if (user.getClaimMode().getKoth().get()) {
+                        this.kothLoader.setRegion(region);
+                        player.sendMessage("Your claiming has been finished and the KoTH's region has been set to what is currently highlighted");
+                        player.sendMessage("If you want to reclaim, simply re-perform the same actions. To disable claim mode, type /kadmin toggle claim mode");
+                    } else {
+                        user.getClaimMode().getFaction().setRegion(region);
+                        player.sendMessage("Your claiming has been finished and the faction's region has been set to what is currently highlighted");
+                        player.sendMessage("If you want to reclaim, simply re-perform the same actions. To disable claim mode, type /fadmin toggle claim mode");
+                    }
 
                     this.handleParticles(player, region, regionOperation);
 

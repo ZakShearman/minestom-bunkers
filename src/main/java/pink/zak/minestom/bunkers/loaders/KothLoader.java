@@ -51,9 +51,12 @@ public class KothLoader {
         JsonUtils.saveJsonElement(jsonObject, this.kothFile);
     }
 
-    @NotNull
     public Region getRegion() {
         return this.region;
+    }
+
+    public void setRegion(Region region) {
+        this.region = region;
     }
 
     public int getMaxYVariation() {

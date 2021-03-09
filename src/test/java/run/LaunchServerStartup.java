@@ -10,6 +10,7 @@ import net.minestom.server.instance.ChunkPopulator;
 import net.minestom.server.instance.InstanceContainer;
 import net.minestom.server.instance.batch.ChunkBatch;
 import net.minestom.server.instance.block.Block;
+import net.minestom.server.instance.block.rule.vanilla.WallPlacementRule;
 import net.minestom.server.inventory.Inventory;
 import net.minestom.server.network.ConnectionManager;
 import net.minestom.server.storage.StorageLocation;
@@ -38,6 +39,13 @@ public class LaunchServerStartup {
             player.setRespawnPoint(new Position(0, 80, 0));
             player.addEventCallback(PlayerLoginEvent.class, event -> {
                 event.setSpawningInstance(instanceContainer);
+                for (Block block : Block.values()) {
+                    String blockNameLower = block.toString().toLowerCase();
+                    if (blockNameLower.endsWith("_wall") || blockNameLower.endsWith("_fence")) {
+                        MinecraftServer.getBlockManager().registerBlockPlacementRule(new WallPlacementRule(block));
+                        System.out.println("Registering wall placement rule for " + blockNameLower);
+                    }
+                }
                 MinecraftServer.getConnectionManager().broadcastMessage(ColoredText.of(player.getUsername() + " logged in. There are " + MinecraftServer.getConnectionManager().getOnlinePlayers().size() + " online"));
             });
         });

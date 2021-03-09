@@ -5,6 +5,7 @@ import net.minestom.server.chat.ColoredText;
 import net.minestom.server.command.builder.Command;
 import pink.zak.minestom.bunkers.BunkersExtension;
 import pink.zak.minestom.bunkers.commands.kothadmin.subs.SetSubCommands;
+import pink.zak.minestom.bunkers.commands.kothadmin.subs.ToggleClaimModeSub;
 
 public class KothAdminCommand extends Command {
 
@@ -12,6 +13,7 @@ public class KothAdminCommand extends Command {
         super("kothadmin", "kadmin");
 
         this.addSubcommand(new SetSubCommands(extension));
+        this.addSubcommand(new ToggleClaimModeSub(extension));
 
         this.setDefaultExecutor((sender, args) -> {
             sender.sendMessage(ColoredText.of(ChatColor.YELLOW, "/kadmin set cap time <seconds>" +

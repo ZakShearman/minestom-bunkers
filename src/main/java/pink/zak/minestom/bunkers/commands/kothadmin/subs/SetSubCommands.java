@@ -19,7 +19,7 @@ public class SetSubCommands extends Command {
         this.kothLoader = extension.getKothLoader();
 
         this.addSyntax(this::onSetCapTimeExecute, ArgumentType.Word("cap"), ArgumentType.Word("time"), ArgumentType.Integer("seconds"));
-        this.addSyntax(this::onSetTimeToStartExecute, ArgumentType.Word("time"), ArgumentType.Word("time"), ArgumentType.Word("start"), ArgumentType.Integer("seconds"));
+        this.addSyntax(this::onSetTimeToStartExecute, ArgumentType.Word("time"), ArgumentType.Word("to"), ArgumentType.Word("start"), ArgumentType.Integer("seconds"));
         this.addSyntax(this::onSetMaxYVariationExecute, ArgumentType.Word("max"), ArgumentType.Word("y"), ArgumentType.Word("variation"), ArgumentType.Integer("blocks"));
     }
 
@@ -40,6 +40,5 @@ public class SetSubCommands extends Command {
         int maxYVariation = arguments.get("blocks");
         this.kothLoader.setMaxYVariation(maxYVariation);
         executor.sendMessage("Max Y variation on KoTH set to " + maxYVariation + " blocks");
-
     }
 }

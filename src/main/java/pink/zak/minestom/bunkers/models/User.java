@@ -27,10 +27,15 @@ public class User {
 
     public static class ClaimMode {
         private final AtomicBoolean enabled = new AtomicBoolean(false);
+        private final AtomicBoolean koth = new AtomicBoolean(false);
         private Faction faction;
 
         public AtomicBoolean getEnabled() {
             return this.enabled;
+        }
+
+        public AtomicBoolean getKoth() {
+            return this.koth;
         }
 
         public Faction getFaction() {

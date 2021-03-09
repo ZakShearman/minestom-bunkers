@@ -9,17 +9,19 @@ import net.minestom.server.event.player.PlayerLoginEvent;
 import net.minestom.server.extensions.Extension;
 import org.slf4j.Logger;
 import pink.zak.minestom.bunkers.cache.UserCache;
-import pink.zak.minestom.bunkers.commands.kothadmin.KothAdminCommand;
-import pink.zak.minestom.bunkers.listeners.BlockListener;
-import pink.zak.minestom.bunkers.listeners.RegionModeListener;
-import pink.zak.minestom.bunkers.loaders.FactionLoader;
+import pink.zak.minestom.bunkers.commands.GamemodeCommand;
 import pink.zak.minestom.bunkers.commands.SaveCommand;
 import pink.zak.minestom.bunkers.commands.StopCommand;
 import pink.zak.minestom.bunkers.commands.faction.FactionCommand;
 import pink.zak.minestom.bunkers.commands.factionadmin.FactionAdminCommand;
 import pink.zak.minestom.bunkers.commands.gameadmin.GameAdminCommand;
+import pink.zak.minestom.bunkers.commands.kothadmin.KothAdminCommand;
 import pink.zak.minestom.bunkers.game.RunningGame;
+import pink.zak.minestom.bunkers.listeners.BlockListener;
+import pink.zak.minestom.bunkers.listeners.RegionModeListener;
+import pink.zak.minestom.bunkers.loaders.FactionLoader;
 import pink.zak.minestom.bunkers.loaders.KothLoader;
+import pink.zak.minestom.bunkers.scoreboard.ScoreboardManager;
 import pink.zak.minestom.bunkers.utils.command.CommandRegistrar;
 import pink.zak.minestom.bunkers.utils.config.ConfigManager;
 
@@ -35,6 +37,7 @@ public class BunkersExtension extends Extension {
     private FactionLoader factionLoader;
     private KothLoader kothLoader;
     private RunningGame runningGame;
+    private ScoreboardManager scoreboardManager;
 
     public static Logger logger;
 
@@ -53,6 +56,10 @@ public class BunkersExtension extends Extension {
 
         this.factionLoader = new FactionLoader(this);
         this.kothLoader = new KothLoader(this);
+
+        this.scoreboardManager = new ScoreboardManager(this);
+
+        this.scoreboardManager.init();
 
         this.setupListeners();
         this.registerCommands();
@@ -92,6 +99,7 @@ public class BunkersExtension extends Extension {
     private void registerCommands() {
         CommandRegistrar registrar = new CommandRegistrar(this.configManager.getConfig("settings"));
 
+        MinecraftServer.getCommandManager().register(new GamemodeCommand());
         registrar.register(
                 new FactionCommand(),
                 new FactionAdminCommand(this),
@@ -128,5 +136,9 @@ public class BunkersExtension extends Extension {
 
     public void setRunningGame(RunningGame runningGame) {
         this.runningGame = runningGame;
+    }
+
+    public ScoreboardManager getScoreboardManager() {
+        return this.scoreboardManager;
     }
 }
