@@ -9,6 +9,8 @@ import net.minestom.server.event.player.PlayerLoginEvent;
 import net.minestom.server.extensions.Extension;
 import org.slf4j.Logger;
 import pink.zak.minestom.bunkers.cache.UserCache;
+import pink.zak.minestom.bunkers.combat.CombatHandler;
+import pink.zak.minestom.bunkers.combat.meta.AddonMetaManager;
 import pink.zak.minestom.bunkers.commands.GamemodeCommand;
 import pink.zak.minestom.bunkers.commands.SaveCommand;
 import pink.zak.minestom.bunkers.commands.StopCommand;
@@ -41,9 +43,15 @@ public class BunkersExtension extends Extension {
 
     public static Logger logger;
 
+    private static final AddonMetaManager addonMetaManager = new AddonMetaManager();
+
     @SneakyThrows
     @Override
     public void initialize() {
+        addonMetaManager.init();
+
+        new CombatHandler().init();
+
         logger = super.getLogger();
         this.basePath = Paths.get("").resolve("extensions").resolve("bunkers");
         this.configManager = new ConfigManager(this.basePath);
@@ -140,5 +148,9 @@ public class BunkersExtension extends Extension {
 
     public ScoreboardManager getScoreboardManager() {
         return this.scoreboardManager;
+    }
+
+    public static AddonMetaManager getAddonMetaManager() {
+        return addonMetaManager;
     }
 }
