@@ -3,19 +3,19 @@ package pink.zak.minestom.bunkers.combat.meta.types;
 import pink.zak.minestom.bunkers.combat.meta.AddonMeta;
 
 public class WeaponMeta implements AddonMeta {
-    private final double damage;
-    private final double attackSpeed;
+    private final float damage;
+    private final float attackSpeed;
 
-    public WeaponMeta(double damage, double attackSpeed) {
+    public WeaponMeta(float damage, float attackSpeed) {
         this.damage = damage;
         this.attackSpeed = attackSpeed;
     }
 
-    public double getDamage() {
+    public float getDamage() {
         return this.damage;
     }
 
-    public double getAttackSpeed() {
+    public float getAttackSpeed() {
         return this.attackSpeed;
     }
 }

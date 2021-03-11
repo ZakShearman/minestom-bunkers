@@ -1,25 +1,33 @@
 package pink.zak.minestom.bunkers.combat;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Maps;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.chat.ColoredText;
 import net.minestom.server.entity.Entity;
+import net.minestom.server.entity.GameMode;
 import net.minestom.server.entity.LivingEntity;
 import net.minestom.server.entity.Player;
 import net.minestom.server.entity.damage.DamageType;
-import net.minestom.server.event.GlobalEventHandler;
 import net.minestom.server.event.entity.EntityAttackEvent;
+import net.minestom.server.event.entity.EntityDeathEvent;
 import net.minestom.server.event.player.PlayerDisconnectEvent;
 import net.minestom.server.event.player.PlayerLoginEvent;
 import net.minestom.server.event.player.PlayerMoveEvent;
+import net.minestom.server.instance.Chunk;
 import net.minestom.server.instance.block.Block;
 import net.minestom.server.item.ItemStack;
+import net.minestom.server.item.Material;
 import net.minestom.server.potion.PotionEffect;
 import net.minestom.server.potion.TimedPotion;
+import net.minestom.server.sound.Sound;
+import net.minestom.server.sound.SoundCategory;
 import net.minestom.server.utils.Position;
 import net.minestom.server.utils.time.TimeUnit;
 import pink.zak.minestom.bunkers.BunkersExtension;
+import pink.zak.minestom.bunkers.combat.meta.AddonMeta;
 import pink.zak.minestom.bunkers.combat.meta.types.BlockMeta;
+import pink.zak.minestom.bunkers.combat.meta.types.WeaponMeta;
 import pink.zak.minestom.bunkers.combat.model.CombatPlayer;
 
 import java.util.Map;
@@ -27,29 +35,50 @@ import java.util.UUID;
 
 public class CombatHandler {
     private final Map<UUID, CombatPlayer> combatPlayerMap = Maps.newConcurrentMap();
+    private final Map<Entity, Long> entityDamageTimeMap = Maps.newConcurrentMap();
+
+    private final long ATTACK_COOLDOWN_MILLISECONDS = 500;
 
     public void init() {
         this.initPlayerMap();
+        this.initEntityMap();
         MinecraftServer.getGlobalEventHandler().addEventCallback(EntityAttackEvent.class, event -> {
             if (!(event.getTarget() instanceof LivingEntity))
                 return;
-            LivingEntity target = (LivingEntity) event.getTarget();
+            LivingEntity victim = (LivingEntity) event.getTarget();
             LivingEntity attacker = (LivingEntity) event.getEntity();
             ItemStack holdingItem = attacker.getItemInMainHand();
-            if (target.isDead())
+
+            if (this.entityDamageTimeMap.containsKey(victim) && System.currentTimeMillis() - this.entityDamageTimeMap.get(victim) < this.ATTACK_COOLDOWN_MILLISECONDS)
+                return;
+            if (victim.isDead() || attacker.isDead())
+                return;
+            if (attacker instanceof Player && ((Player) attacker).getGameMode() == GameMode.SPECTATOR)
                 return;
 
-            float damage = 2.0f; // In vanilla this is Attributes.ATTACK_DAMAGE
-            float enchantBonus = BunkersExtension.getAddonMetaManager().getEnchantDamageBonus(holdingItem, target);
+            float damage = this.getBaseDamage(attacker); // In vanilla this is Attributes.ATTACK_DAMAGE
+            float enchantBonus = BunkersExtension.getAddonMetaManager().getEnchantDamageBonus(holdingItem, victim);
 
             boolean critical = attacker instanceof Player && this.shouldBeCritical((Player) attacker);
 
-            if (critical)
+            if (critical) {
                 damage *= 1.5;
+                attacker.setSprinting(false);
+            }
             damage += enchantBonus;
-            MinecraftServer.getConnectionManager().broadcastMessage(ColoredText.of("Damaging " + (target instanceof Player ? ((Player) target).getUsername() : target.getEntityType()) + " for " + damage + "damage"));
-            target.damage(DamageType.fromEntity(attacker), damage);
+            MinecraftServer.getConnectionManager().broadcastMessage(ColoredText.of("Damaging " + (victim instanceof Player ? ((Player) victim).getUsername() : victim.getEntityType()) + " for " + damage + " damage"));
+            this.entityDamageTimeMap.put(victim, System.currentTimeMillis());
+
+            this.playSounds(victim, attacker, critical);
+            if (attacker instanceof Player)
+                victim.damage(DamageType.fromPlayer((Player) attacker), damage);
+            else
+                victim.damage(DamageType.fromEntity(attacker), damage);
         });
+    }
+
+    private void initEntityMap() {
+        MinecraftServer.getGlobalEventHandler().addEventCallback(EntityDeathEvent.class, event -> this.entityDamageTimeMap.remove(event.getEntity()));
     }
 
     private void initPlayerMap() {
@@ -64,7 +93,10 @@ public class CombatHandler {
 
             float distance = (float) oldPosition.getDistance(newPosition);
 
-            this.combatPlayerMap.get(event.getPlayer().getUuid()).walkDist += distance;
+            CombatPlayer combatPlayer = this.combatPlayerMap.get(event.getPlayer().getUuid());
+            combatPlayer.walkDist += distance;
+            combatPlayer.oldPosition = combatPlayer.newPosition;
+            combatPlayer.newPosition = newPosition;
         });
         MinecraftServer.getSchedulerManager().buildTask(() -> {
             for (CombatPlayer combatPlayer : this.combatPlayerMap.values()) {
@@ -74,16 +106,53 @@ public class CombatHandler {
         }).delay(1, TimeUnit.SECOND);
     }
 
+    private void playSounds(LivingEntity victim, LivingEntity attacker, boolean critical) {
+        Position position = victim.getPosition();
+        int x = (int) position.getX();
+        int y = (int) position.getY();
+        int z = (int) position.getZ();
+        Chunk victimChunk = victim.getChunk();
+        if (victimChunk != null && attacker instanceof Player)
+            if (critical)
+                for (Player viewer : victimChunk.getViewers())
+                    viewer.playSound(Sound.ENTITY_PLAYER_ATTACK_CRIT, SoundCategory.PLAYERS, x, y, z, 1, 0);
+            else
+                for (Player viewer : victimChunk.getViewers())
+                    viewer.playSound(Sound.ENTITY_PLAYER_ATTACK_STRONG, SoundCategory.PLAYERS, x, y, z, 1, 0);
+    }
+
+    private float getBaseDamage(LivingEntity entity) {
+        Material heldMaterial = entity.getItemInMainHand().getMaterial();
+        ImmutableSet<AddonMeta> materialMetas = BunkersExtension.getAddonMetaManager().getMaterialMeta(heldMaterial);
+        if (materialMetas == null || materialMetas.isEmpty())
+            return 2.0f;
+        WeaponMeta weaponMeta = null;
+        for (AddonMeta addonMeta : materialMetas) {
+            if (addonMeta instanceof WeaponMeta) {
+                weaponMeta = (WeaponMeta) addonMeta;
+                break;
+            }
+        }
+        if (weaponMeta == null)
+            return 2.0f;
+        return weaponMeta.getDamage();
+    }
+
     private boolean shouldBeCritical(Player player) {
         Block blockAtPosition = player.getInstance().getBlock(player.getPosition().toBlockPosition());
-        return !player.isOnGround() // player must not be on ground
-                && !player.isSprinting() // player must not be sprinting
+        if (!player.isOnGround() // player must not be on ground
+                // && !player.isSprinting() // player must not be sprinting (I don't want this stupid new mechanic)
                 && !blockAtPosition.isLiquid() // player must not be in a liquid
                 && player.getVehicle() == null // player must not be riding on an entity
                 && !this.isBlockClimbable(blockAtPosition) // player must not be on a climbable block
                 && !this.hasPlayerGotEffect(player, PotionEffect.BLINDNESS) // player must not have blindness
-                && !this.hasPlayerGotEffect(player, PotionEffect.SLOW_FALLING) // player must not have slow falling
-                && this.combatPlayerMap.get(player.getUuid()).previousWalkDist <= 4.317; // player must've walked less than 4.317 blocks in the previous second
+                && !this.hasPlayerGotEffect(player, PotionEffect.SLOW_FALLING)) { // player must not have slow falling
+
+            CombatPlayer combatPlayer = this.combatPlayerMap.get(player.getUuid());
+            return combatPlayer.previousWalkDist <= 4.317
+                    && combatPlayer.isFalling();
+        }
+        return false;
     }
 
     private boolean isBlockClimbable(Block block) {

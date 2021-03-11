@@ -14,6 +14,7 @@ import pink.zak.minestom.bunkers.combat.meta.types.BlockMeta;
 import pink.zak.minestom.bunkers.combat.meta.types.EntityMeta;
 import pink.zak.minestom.bunkers.combat.meta.types.enchantment.EnchantmentMeta;
 import pink.zak.minestom.bunkers.combat.meta.types.WeaponMeta;
+import pink.zak.minestom.bunkers.combat.meta.types.enchantment.types.BaneOfAthropodsEnchantmentMeta;
 import pink.zak.minestom.bunkers.combat.meta.types.enchantment.types.SharpnessEnchantmentMeta;
 import pink.zak.minestom.bunkers.combat.meta.types.enchantment.types.SmiteEnchantmentMeta;
 
@@ -34,39 +35,37 @@ public class AddonMetaManager {
     }
 
     private void initItems() {
-        // Air is used as the default
-        this.configureMaterial(Material.AIR, new WeaponMeta(1, 4));
         // tools / weapons
         // trident
-        this.configureMaterial(Material.TRIDENT, new WeaponMeta(9, 1.1));
+        this.configureMaterial(Material.TRIDENT, new WeaponMeta(9, 1.1f));
         // swords
-        this.configureMaterial(Material.NETHERITE_SWORD, new WeaponMeta(8, 1.6));
-        this.configureMaterial(Material.DIAMOND_SWORD, new WeaponMeta(7, 1.6));
-        this.configureMaterial(Material.IRON_SWORD, new WeaponMeta(6, 1.6));
-        this.configureMaterial(Material.STONE_SWORD, new WeaponMeta(5, 1.6));
-        this.configureMaterial(Material.GOLDEN_SWORD, new WeaponMeta(4, 1.6));
-        this.configureMaterial(Material.WOODEN_SWORD, new WeaponMeta(4, 1.6));
+        this.configureMaterial(Material.NETHERITE_SWORD, new WeaponMeta(8, 1.6f));
+        this.configureMaterial(Material.DIAMOND_SWORD, new WeaponMeta(7, 1.6f));
+        this.configureMaterial(Material.IRON_SWORD, new WeaponMeta(6, 1.6f));
+        this.configureMaterial(Material.STONE_SWORD, new WeaponMeta(5, 1.6f));
+        this.configureMaterial(Material.GOLDEN_SWORD, new WeaponMeta(4, 1.6f));
+        this.configureMaterial(Material.WOODEN_SWORD, new WeaponMeta(4, 1.6f));
         // shovels
-        this.configureMaterial(Material.NETHERITE_SHOVEL, new WeaponMeta(6.5, 1));
-        this.configureMaterial(Material.DIAMOND_SHOVEL, new WeaponMeta(5.5, 1));
-        this.configureMaterial(Material.IRON_SHOVEL, new WeaponMeta(4.5, 1));
-        this.configureMaterial(Material.STONE_SHOVEL, new WeaponMeta(3.5, 1));
-        this.configureMaterial(Material.GOLDEN_SHOVEL, new WeaponMeta(2.5, 1));
-        this.configureMaterial(Material.WOODEN_SHOVEL, new WeaponMeta(2.5, 1));
+        this.configureMaterial(Material.NETHERITE_SHOVEL, new WeaponMeta(6.5f, 1));
+        this.configureMaterial(Material.DIAMOND_SHOVEL, new WeaponMeta(5.5f, 1));
+        this.configureMaterial(Material.IRON_SHOVEL, new WeaponMeta(4.5f, 1));
+        this.configureMaterial(Material.STONE_SHOVEL, new WeaponMeta(3.5f, 1));
+        this.configureMaterial(Material.GOLDEN_SHOVEL, new WeaponMeta(2.5f, 1));
+        this.configureMaterial(Material.WOODEN_SHOVEL, new WeaponMeta(2.5f, 1));
         // pickaxes
-        this.configureMaterial(Material.NETHERITE_PICKAXE, new WeaponMeta(6, 1.2));
-        this.configureMaterial(Material.DIAMOND_PICKAXE, new WeaponMeta(5, 1.2));
-        this.configureMaterial(Material.IRON_PICKAXE, new WeaponMeta(4, 1.2));
-        this.configureMaterial(Material.STONE_PICKAXE, new WeaponMeta(3, 1.2));
-        this.configureMaterial(Material.GOLDEN_PICKAXE, new WeaponMeta(2, 1.2));
-        this.configureMaterial(Material.WOODEN_PICKAXE, new WeaponMeta(2, 1.2));
+        this.configureMaterial(Material.NETHERITE_PICKAXE, new WeaponMeta(6, 1.2f));
+        this.configureMaterial(Material.DIAMOND_PICKAXE, new WeaponMeta(5, 1.2f));
+        this.configureMaterial(Material.IRON_PICKAXE, new WeaponMeta(4, 1.2f));
+        this.configureMaterial(Material.STONE_PICKAXE, new WeaponMeta(3, 1.2f));
+        this.configureMaterial(Material.GOLDEN_PICKAXE, new WeaponMeta(2, 1.2f));
+        this.configureMaterial(Material.WOODEN_PICKAXE, new WeaponMeta(2, 1.2f));
         // axes
         this.configureMaterial(Material.NETHERITE_AXE, new WeaponMeta(10, 1));
         this.configureMaterial(Material.DIAMOND_AXE, new WeaponMeta(9, 1));
-        this.configureMaterial(Material.IRON_AXE, new WeaponMeta(9, 0.9));
-        this.configureMaterial(Material.STONE_AXE, new WeaponMeta(9, 0.8));
+        this.configureMaterial(Material.IRON_AXE, new WeaponMeta(9, 0.9f));
+        this.configureMaterial(Material.STONE_AXE, new WeaponMeta(9, 0.8f));
         this.configureMaterial(Material.GOLDEN_AXE, new WeaponMeta(7, 1));
-        this.configureMaterial(Material.WOODEN_AXE, new WeaponMeta(7, 0.8));
+        this.configureMaterial(Material.WOODEN_AXE, new WeaponMeta(7, 0.8f));
         // hoes
         this.configureMaterial(Material.NETHERITE_HOE, new WeaponMeta(1, 4));
         this.configureMaterial(Material.DIAMOND_HOE, new WeaponMeta(1, 4));
@@ -108,10 +107,14 @@ public class AddonMetaManager {
         this.configureMaterial(Material.LEATHER_BOOTS, new ArmourMeta(1, 0));
     }
 
+    public ImmutableSet<AddonMeta> getMaterialMeta(Material material) {
+        return this.materialMetaMap.get(material);
+    }
+
     private void initEnchantments() {
         this.enchantmentMetaMap.put(Enchantment.SHARPNESS, new SharpnessEnchantmentMeta());
         this.enchantmentMetaMap.put(Enchantment.SMITE, new SmiteEnchantmentMeta());
-        this.enchantmentMetaMap.put(Enchantment.BANE_OF_ARTHROPODS, new SharpnessEnchantmentMeta()); // todo
+        this.enchantmentMetaMap.put(Enchantment.BANE_OF_ARTHROPODS, new BaneOfAthropodsEnchantmentMeta());
     }
 
     private void initEntities() {

@@ -35,17 +35,17 @@ public class LaunchServerStartup {
         InstanceContainer instanceContainer = MinecraftServer.getInstanceManager().createInstanceContainer(storageLocation);
         MinecraftServer.setChunkViewDistance(16);
 
+        for (Block block : Block.values()) {
+            String blockNameLower = block.toString().toLowerCase();
+            if (blockNameLower.endsWith("_wall") || blockNameLower.endsWith("_fence")) {
+                MinecraftServer.getBlockManager().registerBlockPlacementRule(new WallPlacementRule(block));
+                System.out.println("Registering wall placement rule for " + blockNameLower);
+            }
+        }
         MinecraftServer.getConnectionManager().addPlayerInitialization(player -> {
             player.setRespawnPoint(new Position(0, 80, 0));
             player.addEventCallback(PlayerLoginEvent.class, event -> {
                 event.setSpawningInstance(instanceContainer);
-                for (Block block : Block.values()) {
-                    String blockNameLower = block.toString().toLowerCase();
-                    if (blockNameLower.endsWith("_wall") || blockNameLower.endsWith("_fence")) {
-                        MinecraftServer.getBlockManager().registerBlockPlacementRule(new WallPlacementRule(block));
-                        System.out.println("Registering wall placement rule for " + blockNameLower);
-                    }
-                }
                 MinecraftServer.getConnectionManager().broadcastMessage(ColoredText.of(player.getUsername() + " logged in. There are " + MinecraftServer.getConnectionManager().getOnlinePlayers().size() + " online"));
             });
         });

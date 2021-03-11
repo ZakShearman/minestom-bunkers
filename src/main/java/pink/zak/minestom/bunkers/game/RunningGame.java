@@ -67,9 +67,9 @@ public class RunningGame {
 
     private void spawnVillagers() {
         for (Faction faction : this.factions) {
-            LivingEntity combatShop =  new LivingEntity(EntityType.VILLAGER);
-            LivingEntity buildingShop =  new LivingEntity(EntityType.VILLAGER);
-            LivingEntity enchantmentShop =  new LivingEntity(EntityType.VILLAGER);
+            LivingEntity combatShop = new LivingEntity(EntityType.VILLAGER);
+            LivingEntity buildingShop = new LivingEntity(EntityType.VILLAGER);
+            LivingEntity enchantmentShop = new LivingEntity(EntityType.VILLAGER);
 
             faction.getLiveVillagers().add(combatShop);
             faction.getLiveVillagers().add(buildingShop);
@@ -99,19 +99,12 @@ public class RunningGame {
             llama.setHealth(1000f);
             llama.setCustomName(this.getLlamaName(faction, llama));
             llama.addEventCallback(EntityDamageEvent.class, event -> {
-                MinecraftServer.getConnectionManager().broadcastMessage(ColoredText.of("A"));
                 if (event.getDamageType() instanceof EntityDamage) {
-                    MinecraftServer.getConnectionManager().broadcastMessage(ColoredText.of("B"));
                     EntityDamage entityDamage = (EntityDamage) event.getDamageType();
-                    MinecraftServer.getConnectionManager().broadcastMessage(ColoredText.of("C " + entityDamage));
                     if (entityDamage.getSource() instanceof Player) {
-                        MinecraftServer.getConnectionManager().broadcastMessage(ColoredText.of("D"));
                         Player player = (Player) entityDamage.getSource();
-                        MinecraftServer.getConnectionManager().broadcastMessage(ColoredText.of("E " + player));
                         if (!faction.getPlayers().contains(player.getUuid())) {
-                            MinecraftServer.getConnectionManager().broadcastMessage(ColoredText.of("F"));
                             llama.setCustomName(this.getLlamaName(faction, llama));
-                            MinecraftServer.getConnectionManager().broadcastMessage(ColoredText.of("G"));
                             return;
                         }
                     }

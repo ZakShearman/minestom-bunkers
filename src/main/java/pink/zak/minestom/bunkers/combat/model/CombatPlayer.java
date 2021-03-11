@@ -1,15 +1,20 @@
 package pink.zak.minestom.bunkers.combat.model;
 
 import net.minestom.server.entity.Player;
-
-import java.util.UUID;
+import net.minestom.server.utils.Position;
 
 public class CombatPlayer {
     public final Player player;
     public float walkDist;
     public float previousWalkDist;
+    public Position oldPosition;
+    public Position newPosition;
 
     public CombatPlayer(Player player) {
         this.player = player;
+    }
+
+    public boolean isFalling() {
+        return this.oldPosition.getY() > this.newPosition.getY();
     }
 }
