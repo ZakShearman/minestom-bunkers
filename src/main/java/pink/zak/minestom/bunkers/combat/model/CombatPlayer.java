@@ -15,6 +15,8 @@ public class CombatPlayer {
     }
 
     public boolean isFalling() {
+        if (this.oldPosition == null || this.newPosition == null)
+            return false;
         return this.oldPosition.getY() > this.newPosition.getY();
     }
 }

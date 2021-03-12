@@ -23,6 +23,7 @@ import net.minestom.server.potion.TimedPotion;
 import net.minestom.server.sound.Sound;
 import net.minestom.server.sound.SoundCategory;
 import net.minestom.server.utils.Position;
+import net.minestom.server.utils.Vector;
 import net.minestom.server.utils.time.TimeUnit;
 import pink.zak.minestom.bunkers.BunkersExtension;
 import pink.zak.minestom.bunkers.combat.meta.AddonMeta;
@@ -69,11 +70,13 @@ public class CombatHandler {
             MinecraftServer.getConnectionManager().broadcastMessage(ColoredText.of("Damaging " + (victim instanceof Player ? ((Player) victim).getUsername() : victim.getEntityType()) + " for " + damage + " damage"));
             this.entityDamageTimeMap.put(victim, System.currentTimeMillis());
 
-            this.playSounds(victim, attacker, critical);
             if (attacker instanceof Player)
                 victim.damage(DamageType.fromPlayer((Player) attacker), damage);
             else
                 victim.damage(DamageType.fromEntity(attacker), damage);
+            victim.heal();
+            this.playSounds(victim, attacker, critical);
+            this.handleKnockback(victim, attacker);
         });
     }
 
@@ -106,12 +109,40 @@ public class CombatHandler {
         }).delay(1, TimeUnit.SECOND);
     }
 
+    private void handleKnockback(LivingEntity victim, LivingEntity attacker) {
+        int knockbackMultiplier = 0;
+        if (attacker.isSprinting())
+            knockbackMultiplier++;
+        double xVelocity = Math.sin(attacker.getPosition().getYaw() * 0.017453292f);
+        double zVelocity = -Math.sin(attacker.getPosition().getYaw() * 0.017453292f);
+
+        Vector velocityVector = new Vector(xVelocity, 0, zVelocity).normalize();
+        velocityVector.multiply(knockbackMultiplier);
+
+        Vector currentVelocity = victim.getVelocity();
+
+        velocityVector.setX(currentVelocity.getX() / 2 - velocityVector.getX());
+        velocityVector.setY(victim.isOnGround() ? Math.min(0.4, currentVelocity.getY() / 2.0 + knockbackMultiplier) : velocityVector.getY());
+        velocityVector.setZ(currentVelocity.getZ() / 2 - velocityVector.getZ());
+
+        velocityVector.setX(velocityVector.getX() * 3);
+        velocityVector.setY(velocityVector.getY() * 3);
+        velocityVector.setZ(velocityVector.getX() * 3);
+
+        victim.setVelocity(velocityVector);
+        MinecraftServer.getConnectionManager().broadcastMessage(ColoredText.of("\n" +
+                "attacker yaw: " + attacker.getPosition().getYaw() +
+                "\nx velocity: " + velocityVector.getX() +
+                "\ny velocity: " + velocityVector.getY() +
+                "\nz velocity: " + velocityVector.getZ()));
+    }
+
     private void playSounds(LivingEntity victim, LivingEntity attacker, boolean critical) {
         Position position = victim.getPosition();
+        Chunk victimChunk = victim.getChunk();
         int x = (int) position.getX();
         int y = (int) position.getY();
         int z = (int) position.getZ();
-        Chunk victimChunk = victim.getChunk();
         if (victimChunk != null && attacker instanceof Player)
             if (critical)
                 for (Player viewer : victimChunk.getViewers())

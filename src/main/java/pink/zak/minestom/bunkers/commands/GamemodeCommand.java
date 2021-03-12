@@ -44,7 +44,7 @@ public class GamemodeCommand extends Command {
 
     private void executeOnSelf(CommandSender sender, Arguments arguments) {
         final Player player = sender.asPlayer();
-        final String gamemodeName = arguments.getWord("mode");
+        final String gamemodeName = arguments.get("mode");
         final GameMode mode = GameMode.valueOf(gamemodeName.toUpperCase());
         assert mode != null; // mode is not supposed to be null, because gamemodeName will be valid
         player.setGameMode(mode);
@@ -53,11 +53,10 @@ public class GamemodeCommand extends Command {
 
     private void executeOnOther(CommandSender sender, Arguments arguments) {
         final Player player = sender.asPlayer();
-        final String gamemodeName = arguments.getWord("mode");
-        final String targetName = arguments.getWord("player");
+        final String gamemodeName = arguments.get("mode");
+        final String targetName = arguments.get("player");
         final GameMode mode = GameMode.valueOf(gamemodeName.toUpperCase());
-        assert mode != null; // mode is not supposed to be null, because gamemodeName will be valid
-        Optional<Player> target = ((Player) player).getInstance().getPlayers().stream().filter(p -> p.getUsername().equalsIgnoreCase(targetName)).findFirst();
+        Optional<Player> target = player.getInstance().getPlayers().stream().filter(p -> p.getUsername().equalsIgnoreCase(targetName)).findFirst();
         if (target.isPresent()) {
             target.get().setGameMode(mode);
             player.sendMessage(ColoredText.of("{@commands.gamemode.success.other," + targetName + "," + gamemodeName + "}"));

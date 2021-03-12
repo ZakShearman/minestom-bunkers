@@ -73,9 +73,9 @@ public class BunkersExtension extends Extension {
         this.registerCommands();
 
         MinecraftServer.getGlobalEventHandler().addEventCallback(PlayerLoginEvent.class, event -> {
-            event.getPlayer().setGameMode(GameMode.CREATIVE);
+            event.getPlayer().setGameMode(GameMode.SURVIVAL);
             event.getPlayer().setAllowFlying(true);
-            event.getPlayer().setFlying(true);
+            //event.getPlayer().setFlying(true);
             event.getPlayer().setFlyingSpeed(0.15f);
             event.getPlayer().setSkin(PlayerSkin.fromUsername(event.getPlayer().getUsername()));
         });
