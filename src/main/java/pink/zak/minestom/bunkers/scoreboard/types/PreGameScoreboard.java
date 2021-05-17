@@ -1,7 +1,7 @@
 package pink.zak.minestom.bunkers.scoreboard.types;
 
+import net.kyori.adventure.text.Component;
 import net.minestom.server.MinecraftServer;
-import net.minestom.server.chat.ColoredText;
 import net.minestom.server.entity.Player;
 import net.minestom.server.event.player.PlayerSpawnEvent;
 import net.minestom.server.scoreboard.Sidebar;
@@ -40,11 +40,11 @@ public class PreGameScoreboard implements BunkersScoreboard {
     }
 
     private void startScoreboardUpdater() {
-        this.sidebar.createLine(new Sidebar.ScoreboardLine("1", ColoredText.of(" "), 1));
-        this.sidebar.createLine(new Sidebar.ScoreboardLine("online-players", ColoredText.of("Online Players: " + MinecraftServer.getConnectionManager().getOnlinePlayers().size()), 0));
+        this.sidebar.createLine(new Sidebar.ScoreboardLine("1", Component.text(" "), 1));
+        this.sidebar.createLine(new Sidebar.ScoreboardLine("online-players", Component.text("Online Players: " + MinecraftServer.getConnectionManager().getOnlinePlayers().size()), 0));
         MinecraftServer.getSchedulerManager().getTimerExecutionService().scheduleAtFixedRate(() -> {
             if (this.extension.getRunningGame() == null || !this.extension.getRunningGame().isInProgress()) {
-                this.sidebar.updateLineContent("online-players", ColoredText.of("Online Players: " + MinecraftServer.getConnectionManager().getOnlinePlayers().size()));
+                this.sidebar.updateLineContent("online-players", Component.text("Online Players: " + MinecraftServer.getConnectionManager().getOnlinePlayers().size()));
             }
         }, 0, 5, TimeUnit.SECONDS);
     }

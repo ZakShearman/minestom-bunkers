@@ -3,7 +3,6 @@ package run;
 import net.kyori.adventure.text.Component;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.adventure.audience.Audiences;
-import net.minestom.server.chat.ColoredText;
 import net.minestom.server.event.player.PlayerLoginEvent;
 import net.minestom.server.extras.MojangAuth;
 import net.minestom.server.extras.optifine.OptifineSupport;

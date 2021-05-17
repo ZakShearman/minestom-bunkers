@@ -1,6 +1,6 @@
 package pink.zak.minestom.bunkers.commands.factionadmin.subs;
 
-import net.minestom.server.chat.ColoredText;
+import net.kyori.adventure.text.Component;
 import net.minestom.server.command.CommandSender;
 import net.minestom.server.command.builder.Command;
 import net.minestom.server.command.builder.CommandContext;
@@ -31,7 +31,7 @@ public class SetSubCommands extends Command {
         } else {
             Position homePosition = executor.asPlayer().getPosition().clone();
             faction.setHomePosition(homePosition);
-            executor.sendMessage(ColoredText.of("The home of " + faction.getFormattedName() + " has been set to your location."));
+            executor.sendMessage(Component.text("The home of " + faction.getFormattedName() + " has been set to your location."));
         }
     }
 
@@ -44,7 +44,7 @@ public class SetSubCommands extends Command {
             executor.sendMessage("Could not find a faction with the name " + factionName);
         } else {
             faction.setFormatter(formatter);
-            executor.sendMessage(ColoredText.of("The formatted name of " + factionName + " is now " + faction.getFormattedName()));
+            executor.sendMessage(Component.text("The formatted name of " + factionName + " is now " + faction.getFormattedName()));
         }
     }
 
@@ -70,7 +70,7 @@ public class SetSubCommands extends Command {
                 default:
                     return;
             }
-            executor.sendMessage(ColoredText.of("Set the position of the " + shopType + " for the faction " + factionName));
+            executor.sendMessage(Component.text("Set the position of the " + shopType + " for the faction " + factionName));
         }
 
     }

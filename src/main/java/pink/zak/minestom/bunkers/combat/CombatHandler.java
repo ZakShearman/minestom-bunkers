@@ -2,9 +2,10 @@ package pink.zak.minestom.bunkers.combat;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Maps;
-import net.kyori.adventure.key.Key;
 import net.kyori.adventure.sound.Sound;
+import net.kyori.adventure.text.Component;
 import net.minestom.server.MinecraftServer;
+import net.minestom.server.adventure.audience.Audiences;
 import net.minestom.server.chat.ColoredText;
 import net.minestom.server.entity.Entity;
 import net.minestom.server.entity.GameMode;
@@ -22,7 +23,6 @@ import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
 import net.minestom.server.potion.PotionEffect;
 import net.minestom.server.potion.TimedPotion;
-import net.minestom.server.sound.SoundCategory;
 import net.minestom.server.sound.SoundEvent;
 import net.minestom.server.utils.Position;
 import net.minestom.server.utils.Vector;
@@ -69,7 +69,7 @@ public class CombatHandler {
                 attacker.setSprinting(false);
             }
             damage += enchantBonus;
-            MinecraftServer.getConnectionManager().broadcastMessage(ColoredText.of("Damaging " + (victim instanceof Player ? ((Player) victim).getUsername() : victim.getEntityType()) + " for " + damage + " damage"));
+            Audiences.players().sendMessage((Component.text("Damaging " + (victim instanceof Player ? ((Player) victim).getUsername() : victim.getEntityType()) + " for " + damage + " damage")));
             this.entityDamageTimeMap.put(victim, System.currentTimeMillis());
 
             if (attacker instanceof Player)

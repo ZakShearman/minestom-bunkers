@@ -1,10 +1,7 @@
 package pink.zak.minestom.bunkers.commands.factionadmin;
 
-import net.kyori.adventure.bossbar.BossBar;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
-import net.minestom.server.chat.ChatColor;
-import net.minestom.server.chat.ColoredText;
 import net.minestom.server.command.builder.Command;
 import pink.zak.minestom.bunkers.BunkersExtension;
 import pink.zak.minestom.bunkers.commands.factionadmin.subs.CreateFactionSub;

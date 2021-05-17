@@ -2,8 +2,6 @@ package pink.zak.minestom.bunkers;
 
 import com.typesafe.config.Config;
 import lombok.SneakyThrows;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.TextColor;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.entity.GameMode;
 import net.minestom.server.entity.PlayerSkin;
@@ -29,7 +27,6 @@ import pink.zak.minestom.bunkers.utils.command.CommandRegistrar;
 import pink.zak.minestom.bunkers.utils.config.ConfigManager;
 
 import java.io.File;
-import java.net.http.WebSocket;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 

@@ -1,7 +1,5 @@
 package pink.zak.minestom.bunkers.commands;
 
-import java.util.Optional;
-
 import net.minestom.server.chat.ColoredText;
 import net.minestom.server.command.CommandSender;
 import net.minestom.server.command.builder.Command;
@@ -11,6 +9,8 @@ import net.minestom.server.command.builder.arguments.ArgumentType;
 import net.minestom.server.command.builder.exception.ArgumentSyntaxException;
 import net.minestom.server.entity.GameMode;
 import net.minestom.server.entity.Player;
+
+import java.util.Optional;
 
 /**
  * Command that make a player change gamemode

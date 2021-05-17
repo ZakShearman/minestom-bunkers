@@ -3,17 +3,13 @@ package pink.zak.minestom.bunkers.listeners;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.entity.Player;
 import net.minestom.server.event.CancellableEvent;
-import net.minestom.server.event.Event;
-import net.minestom.server.event.PlayerEvent;
 import net.minestom.server.event.player.PlayerBlockBreakEvent;
 import net.minestom.server.event.player.PlayerBlockInteractEvent;
 import net.minestom.server.event.player.PlayerBlockPlaceEvent;
 import net.minestom.server.instance.block.Block;
 import net.minestom.server.utils.BlockPosition;
-import net.minestom.server.utils.Position;
 import pink.zak.minestom.bunkers.BunkersExtension;
 import pink.zak.minestom.bunkers.game.RunningGame;
-import pink.zak.minestom.bunkers.loaders.FactionLoader;
 import pink.zak.minestom.bunkers.models.Faction;
 
 import java.util.Optional;

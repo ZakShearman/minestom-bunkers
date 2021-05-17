@@ -2,7 +2,6 @@ package pink.zak.minestom.bunkers.combat.meta;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Maps;
-import net.minestom.server.entity.Entity;
 import net.minestom.server.entity.EntityType;
 import net.minestom.server.entity.LivingEntity;
 import net.minestom.server.instance.block.Block;
@@ -12,8 +11,8 @@ import net.minestom.server.item.Material;
 import pink.zak.minestom.bunkers.combat.meta.types.ArmourMeta;
 import pink.zak.minestom.bunkers.combat.meta.types.BlockMeta;
 import pink.zak.minestom.bunkers.combat.meta.types.EntityMeta;
-import pink.zak.minestom.bunkers.combat.meta.types.enchantment.EnchantmentMeta;
 import pink.zak.minestom.bunkers.combat.meta.types.WeaponMeta;
+import pink.zak.minestom.bunkers.combat.meta.types.enchantment.EnchantmentMeta;
 import pink.zak.minestom.bunkers.combat.meta.types.enchantment.types.BaneOfAthropodsEnchantmentMeta;
 import pink.zak.minestom.bunkers.combat.meta.types.enchantment.types.SharpnessEnchantmentMeta;
 import pink.zak.minestom.bunkers.combat.meta.types.enchantment.types.SmiteEnchantmentMeta;

@@ -5,8 +5,8 @@ import net.minestom.server.command.CommandSender;
 import net.minestom.server.command.builder.Command;
 import net.minestom.server.command.builder.CommandContext;
 import pink.zak.minestom.bunkers.BunkersExtension;
-import pink.zak.minestom.bunkers.loaders.FactionLoader;
 import pink.zak.minestom.bunkers.game.RunningGame;
+import pink.zak.minestom.bunkers.loaders.FactionLoader;
 
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;

@@ -1,7 +1,5 @@
 package pink.zak.minestom.bunkers.models;
 
-import net.minestom.server.MinecraftServer;
-import net.minestom.server.chat.ColoredText;
 import net.minestom.server.utils.BlockPosition;
 import net.minestom.server.utils.Position;
 import org.jetbrains.annotations.NotNull;
