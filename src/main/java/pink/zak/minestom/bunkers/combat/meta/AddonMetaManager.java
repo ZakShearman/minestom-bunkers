@@ -140,7 +140,7 @@ public class AddonMetaManager {
 
     public float getEnchantDamageBonus(ItemStack itemInHand, LivingEntity attackedEntity) {
         float damageBonus = 0.0f;
-        for (Map.Entry<Enchantment, Short> entry : itemInHand.getEnchantmentMap().entrySet()) {
+        for (Map.Entry<Enchantment, Short> entry : itemInHand.getMeta().getEnchantmentMap().entrySet()) {
             Enchantment enchantment = entry.getKey();
             if (this.enchantmentMetaMap.containsKey(enchantment))
                 damageBonus += this.enchantmentMetaMap.get(enchantment).getDamageBonus(attackedEntity.getEntityType(), entry.getValue());

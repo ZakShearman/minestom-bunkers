@@ -2,6 +2,9 @@ package pink.zak.minestom.bunkers.game;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.TextColor;
+import net.kyori.adventure.util.RGBLike;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.attribute.Attribute;
 import net.minestom.server.chat.ColoredText;
@@ -79,9 +82,9 @@ public class RunningGame {
             buildingShop.setInstance(this.gameInstance, faction.getBuildingShopPosition());
             enchantmentShop.setInstance(this.gameInstance, faction.getEnchantmentShopPosition());
 
-            combatShop.setCustomName(ColoredText.of("{#pink}Combat Shop"));
-            buildingShop.setCustomName(ColoredText.of("{#pink}Building Shop"));
-            enchantmentShop.setCustomName(ColoredText.of("{#pink}Enchantment Shop"));
+            combatShop.setCustomName(Component.text("{#pink}Combat Shop").color(TextColor.color(255, 192, 203)));
+            buildingShop.setCustomName(Component.text("{#pink}Building Shop").color(TextColor.color(255, 192, 203)));
+            enchantmentShop.setCustomName(Component.text("{#pink}Enchantment Shop").color(TextColor.color(255, 192, 203)));
 
             // todo combatShop.addEventCallback()
 

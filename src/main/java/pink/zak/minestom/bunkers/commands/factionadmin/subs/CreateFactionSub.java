@@ -1,8 +1,8 @@
 package pink.zak.minestom.bunkers.commands.factionadmin.subs;
 
 import net.minestom.server.command.CommandSender;
-import net.minestom.server.command.builder.Arguments;
 import net.minestom.server.command.builder.Command;
+import net.minestom.server.command.builder.CommandContext;
 import net.minestom.server.command.builder.arguments.ArgumentType;
 import pink.zak.minestom.bunkers.BunkersExtension;
 import pink.zak.minestom.bunkers.loaders.FactionLoader;
@@ -18,8 +18,8 @@ public class CreateFactionSub extends Command {
         this.addSyntax(this::onExecute, ArgumentType.Literal("faction"), ArgumentType.Word("faction-name"));
     }
 
-    private void onExecute(CommandSender executor, Arguments arguments) {
-        String factionName = arguments.get("faction-name");
+    private void onExecute(CommandSender executor, CommandContext context) {
+        String factionName = context.get("faction-name");
 
         if (this.factionLoader.getFactionMap().keySet().stream().anyMatch(string -> string.equalsIgnoreCase(factionName))) {
             executor.sendMessage("A faction with the name " + factionName + " already exists.");

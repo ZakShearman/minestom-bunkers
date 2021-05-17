@@ -2,14 +2,13 @@ package pink.zak.minestom.bunkers.commands.factionadmin.subs;
 
 import net.minestom.server.chat.ColoredText;
 import net.minestom.server.command.CommandSender;
-import net.minestom.server.command.builder.Arguments;
 import net.minestom.server.command.builder.Command;
+import net.minestom.server.command.builder.CommandContext;
 import net.minestom.server.command.builder.arguments.ArgumentType;
 import net.minestom.server.utils.Position;
 import pink.zak.minestom.bunkers.BunkersExtension;
 import pink.zak.minestom.bunkers.loaders.FactionLoader;
 import pink.zak.minestom.bunkers.models.Faction;
-import pink.zak.minestom.bunkers.models.Region;
 
 public class SetSubCommands extends Command {
     private final FactionLoader factionLoader;
@@ -23,8 +22,8 @@ public class SetSubCommands extends Command {
         this.addSyntax(this::onSetShopExecute, ArgumentType.Literal("shop"), ArgumentType.Word("shop-type").from("combat", "building", "enchantment"), ArgumentType.Word("faction-name").from(this.factionLoader.getFactionNames()));
     }
 
-    private void onSetHomeExecute(CommandSender executor, Arguments arguments) {
-        String factionName = arguments.get("faction-name");
+    private void onSetHomeExecute(CommandSender executor, CommandContext context) {
+        String factionName = context.get("faction-name");
 
         Faction faction = this.factionLoader.getFaction(factionName);
         if (faction == null) {
@@ -36,9 +35,9 @@ public class SetSubCommands extends Command {
         }
     }
 
-    private void onSetFormatterExecute(CommandSender executor, Arguments arguments) {
-        String factionName = arguments.get("faction-name");
-        String formatter = arguments.get("formatter");
+    private void onSetFormatterExecute(CommandSender executor, CommandContext context) {
+        String factionName = context.get("faction-name");
+        String formatter = context.get("formatter");
 
         Faction faction = this.factionLoader.getFaction(factionName);
         if (faction == null) {
@@ -49,9 +48,9 @@ public class SetSubCommands extends Command {
         }
     }
 
-    private void onSetShopExecute(CommandSender executor, Arguments arguments) {
-        String factionName = arguments.get("faction-name");
-        String shopType = arguments.get("shop-type");
+    private void onSetShopExecute(CommandSender executor, CommandContext context) {
+        String factionName = context.get("faction-name");
+        String shopType = context.get("shop-type");
 
         Faction faction = this.factionLoader.getFaction(factionName);
         if (faction == null) {

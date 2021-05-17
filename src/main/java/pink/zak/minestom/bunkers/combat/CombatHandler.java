@@ -2,6 +2,8 @@ package pink.zak.minestom.bunkers.combat;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Maps;
+import net.kyori.adventure.key.Key;
+import net.kyori.adventure.sound.Sound;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.chat.ColoredText;
 import net.minestom.server.entity.Entity;
@@ -20,8 +22,8 @@ import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
 import net.minestom.server.potion.PotionEffect;
 import net.minestom.server.potion.TimedPotion;
-import net.minestom.server.sound.Sound;
 import net.minestom.server.sound.SoundCategory;
+import net.minestom.server.sound.SoundEvent;
 import net.minestom.server.utils.Position;
 import net.minestom.server.utils.Vector;
 import net.minestom.server.utils.time.TimeUnit;
@@ -113,8 +115,12 @@ public class CombatHandler {
         int knockbackMultiplier = 0;
         if (attacker.isSprinting())
             knockbackMultiplier++;
-        double xVelocity = Math.sin(attacker.getPosition().getYaw() * 0.017453292f);
-        double zVelocity = -Math.sin(attacker.getPosition().getYaw() * 0.017453292f);
+        double yaw = (attacker.getPosition().getYaw() < 0 ? -attacker.getPosition().getYaw() : attacker.getPosition().getYaw()) % 360;
+        double distance = attacker.getPosition().getDistance(victim.getPosition());
+        double zVelocity = distance * Math.cos(yaw);
+        double xVelocity = Math.sqrt(Math.pow(distance, 2) - Math.pow(zVelocity, 2));
+        //double xVelocity = Math.sin(attacker.getPosition().getYaw() * 0.017453292f);
+        // double zVelocity = -Math.sin(attacker.getPosition().getYaw() * 0.017453292f);
 
         Vector velocityVector = new Vector(xVelocity, 0, zVelocity).normalize();
         velocityVector.multiply(knockbackMultiplier);
@@ -131,7 +137,8 @@ public class CombatHandler {
 
         victim.setVelocity(velocityVector);
         MinecraftServer.getConnectionManager().broadcastMessage(ColoredText.of("\n" +
-                "attacker yaw: " + attacker.getPosition().getYaw() +
+                "\ndistance: " + distance +
+                "\nattacker yaw: " + yaw +
                 "\nx velocity: " + velocityVector.getX() +
                 "\ny velocity: " + velocityVector.getY() +
                 "\nz velocity: " + velocityVector.getZ()));
@@ -146,10 +153,10 @@ public class CombatHandler {
         if (victimChunk != null && attacker instanceof Player)
             if (critical)
                 for (Player viewer : victimChunk.getViewers())
-                    viewer.playSound(Sound.ENTITY_PLAYER_ATTACK_CRIT, SoundCategory.PLAYERS, x, y, z, 1, 0);
+                    viewer.playSound(Sound.sound(SoundEvent.ENTITY_PLAYER_ATTACK_CRIT.key(), Sound.Source.PLAYER, 1, 0));
             else
                 for (Player viewer : victimChunk.getViewers())
-                    viewer.playSound(Sound.ENTITY_PLAYER_ATTACK_STRONG, SoundCategory.PLAYERS, x, y, z, 1, 0);
+                    viewer.playSound(Sound.sound(SoundEvent.ENTITY_PLAYER_ATTACK_STRONG.key(), Sound.Source.PLAYER, 1, 0));
     }
 
     private float getBaseDamage(LivingEntity entity) {

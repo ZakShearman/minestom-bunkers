@@ -1,5 +1,8 @@
 package pink.zak.minestom.bunkers.commands.factionadmin;
 
+import net.kyori.adventure.bossbar.BossBar;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.TextColor;
 import net.minestom.server.chat.ChatColor;
 import net.minestom.server.chat.ColoredText;
 import net.minestom.server.command.builder.Command;
@@ -20,11 +23,11 @@ public class FactionAdminCommand extends Command {
         this.addSubcommand(new ToggleClaimModeSub(extension));
 
         this.setDefaultExecutor((sender, args) -> {
-            sender.sendMessage(ColoredText.of(ChatColor.YELLOW, "/fadmin list factions" +
+            sender.sendMessage(Component.text("/fadmin list factions" +
                     "\n/fadmin create faction <faction-name>" +
                     "\n/fadmin set spawn <faction-name>" +
                     "\n/fadmin set corner <faction-name>" +
-                    "\n/fadmin set formatter <faction-name> <formatter>"));
+                    "\n/fadmin set formatter <faction-name> <formatter>", TextColor.color(255, 255, 0)));
         });
     }
 }

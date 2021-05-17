@@ -14,12 +14,11 @@ repositories {
     maven { url = uri("https://jitpack.io") }
     maven { url = uri("https://libraries.minecraft.net") }
     maven { url = uri("https://repo.spongepowered.org/maven") }
+    maven { url = uri("https://repo.velocitypowered.com/snapshots") }
 }
 
 dependencies {
     implementation("com.github.Minestom:Minestom:$minestomVersion")
-    //implementation("net.minestom.server:Minestom:1.0")
-
     // Configs
     implementation("com.typesafe:config:1.4.1")
 

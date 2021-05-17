@@ -4,8 +4,8 @@ import java.util.Optional;
 
 import net.minestom.server.chat.ColoredText;
 import net.minestom.server.command.CommandSender;
-import net.minestom.server.command.builder.Arguments;
 import net.minestom.server.command.builder.Command;
+import net.minestom.server.command.builder.CommandContext;
 import net.minestom.server.command.builder.arguments.Argument;
 import net.minestom.server.command.builder.arguments.ArgumentType;
 import net.minestom.server.command.builder.exception.ArgumentSyntaxException;
@@ -38,23 +38,23 @@ public class GamemodeCommand extends Command {
         addSyntax(this::executeOnOther, player, mode);
     }
 
-    private void usage(CommandSender player, Arguments arguments) {
+    private void usage(CommandSender player, CommandContext context) {
         player.sendMessage("Usage: /gamemode [player] <gamemode>");
     }
 
-    private void executeOnSelf(CommandSender sender, Arguments arguments) {
+    private void executeOnSelf(CommandSender sender, CommandContext context) {
         final Player player = sender.asPlayer();
-        final String gamemodeName = arguments.get("mode");
+        final String gamemodeName = context.get("mode");
         final GameMode mode = GameMode.valueOf(gamemodeName.toUpperCase());
         assert mode != null; // mode is not supposed to be null, because gamemodeName will be valid
         player.setGameMode(mode);
         player.sendMessage(ColoredText.of("{@commands.gamemode.success.self," + gamemodeName + "}"));
     }
 
-    private void executeOnOther(CommandSender sender, Arguments arguments) {
+    private void executeOnOther(CommandSender sender, CommandContext context) {
         final Player player = sender.asPlayer();
-        final String gamemodeName = arguments.get("mode");
-        final String targetName = arguments.get("player");
+        final String gamemodeName = context.get("mode");
+        final String targetName = context.get("player");
         final GameMode mode = GameMode.valueOf(gamemodeName.toUpperCase());
         Optional<Player> target = player.getInstance().getPlayers().stream().filter(p -> p.getUsername().equalsIgnoreCase(targetName)).findFirst();
         if (target.isPresent()) {

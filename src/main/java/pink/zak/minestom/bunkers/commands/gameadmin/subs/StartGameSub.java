@@ -2,8 +2,8 @@ package pink.zak.minestom.bunkers.commands.gameadmin.subs;
 
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.command.CommandSender;
-import net.minestom.server.command.builder.Arguments;
 import net.minestom.server.command.builder.Command;
+import net.minestom.server.command.builder.CommandContext;
 import pink.zak.minestom.bunkers.BunkersExtension;
 import pink.zak.minestom.bunkers.loaders.FactionLoader;
 import pink.zak.minestom.bunkers.game.RunningGame;
@@ -24,7 +24,7 @@ public class StartGameSub extends Command {
         this.setDefaultExecutor(this::onExecute);
     }
 
-    private void onExecute(CommandSender executor, Arguments arguments) {
+    private void onExecute(CommandSender executor, CommandContext context) {
         try {
             if (!this.lock.tryLock(2, TimeUnit.SECONDS)) {
                 executor.sendMessage("There was an issue executing your command (thread lock could not be acquired)");

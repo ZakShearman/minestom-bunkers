@@ -2,8 +2,8 @@ package pink.zak.minestom.bunkers.commands;
 
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.command.CommandSender;
-import net.minestom.server.command.builder.Arguments;
 import net.minestom.server.command.builder.Command;
+import net.minestom.server.command.builder.CommandContext;
 import net.minestom.server.entity.Player;
 
 public class StopCommand extends Command {
@@ -17,7 +17,7 @@ public class StopCommand extends Command {
         this.setDefaultExecutor(this::onExecute);
     }
 
-    private void onExecute(CommandSender executor, Arguments arguments) {
+    private void onExecute(CommandSender executor, CommandContext context) {
         MinecraftServer.stopCleanly();
     }
 }

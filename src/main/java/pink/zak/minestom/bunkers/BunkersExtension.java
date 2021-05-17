@@ -2,6 +2,8 @@ package pink.zak.minestom.bunkers;
 
 import com.typesafe.config.Config;
 import lombok.SneakyThrows;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.TextColor;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.entity.GameMode;
 import net.minestom.server.entity.PlayerSkin;
@@ -14,7 +16,6 @@ import pink.zak.minestom.bunkers.combat.meta.AddonMetaManager;
 import pink.zak.minestom.bunkers.commands.GamemodeCommand;
 import pink.zak.minestom.bunkers.commands.SaveCommand;
 import pink.zak.minestom.bunkers.commands.StopCommand;
-import pink.zak.minestom.bunkers.commands.faction.FactionCommand;
 import pink.zak.minestom.bunkers.commands.factionadmin.FactionAdminCommand;
 import pink.zak.minestom.bunkers.commands.gameadmin.GameAdminCommand;
 import pink.zak.minestom.bunkers.commands.kothadmin.KothAdminCommand;
@@ -28,6 +29,7 @@ import pink.zak.minestom.bunkers.utils.command.CommandRegistrar;
 import pink.zak.minestom.bunkers.utils.config.ConfigManager;
 
 import java.io.File;
+import java.net.http.WebSocket;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -75,7 +77,6 @@ public class BunkersExtension extends Extension {
         MinecraftServer.getGlobalEventHandler().addEventCallback(PlayerLoginEvent.class, event -> {
             event.getPlayer().setGameMode(GameMode.SURVIVAL);
             event.getPlayer().setAllowFlying(true);
-            //event.getPlayer().setFlying(true);
             event.getPlayer().setFlyingSpeed(0.15f);
             event.getPlayer().setSkin(PlayerSkin.fromUsername(event.getPlayer().getUsername()));
         });
@@ -109,7 +110,6 @@ public class BunkersExtension extends Extension {
 
         MinecraftServer.getCommandManager().register(new GamemodeCommand());
         registrar.register(
-                new FactionCommand(),
                 new FactionAdminCommand(this),
                 new GameAdminCommand(this),
                 new KothAdminCommand(this),

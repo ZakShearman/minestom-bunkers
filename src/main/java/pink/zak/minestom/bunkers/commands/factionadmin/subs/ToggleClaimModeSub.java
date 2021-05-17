@@ -1,8 +1,8 @@
 package pink.zak.minestom.bunkers.commands.factionadmin.subs;
 
 import net.minestom.server.command.CommandSender;
-import net.minestom.server.command.builder.Arguments;
 import net.minestom.server.command.builder.Command;
+import net.minestom.server.command.builder.CommandContext;
 import net.minestom.server.command.builder.arguments.ArgumentType;
 import pink.zak.minestom.bunkers.BunkersExtension;
 import pink.zak.minestom.bunkers.cache.UserCache;
@@ -22,8 +22,8 @@ public class ToggleClaimModeSub extends Command {
         this.addSyntax(this::onExecute, ArgumentType.Literal("claim"), ArgumentType.Literal("mode"), ArgumentType.Word("faction-name").from(this.factionLoader.getFactionNames()).setDefaultValue(" "));
     }
 
-    private void onExecute(CommandSender executor, Arguments arguments) {
-        String factionName = arguments.get("faction-name");
+    private void onExecute(CommandSender executor, CommandContext context) {
+        String factionName = context.get("faction-name");
         User user = this.userCache.getUser(executor.asPlayer().getUuid());
         if (!user.getClaimMode().getEnabled().get() && factionName.equals(" ")) {
             executor.sendMessage("You must specify a faction name to enable claim mode.");
